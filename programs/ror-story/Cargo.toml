@@ -1,0 +1,20 @@
+[package]
+name = "ror-story"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "ror_story"
+
+[features]
+no-entrypoint = []
+no-idl = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "^0.17.0"
+spl-token = { version = "^3.2.0", features = [ "no-entrypoint" ] }
+spl-token-metadata = { path = "../../../metaplex/rust/token-metadata/program", features = [ "no-entrypoint" ] }
