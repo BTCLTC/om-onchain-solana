@@ -1,5 +1,5 @@
 [programs.localnet]
-ror_story = "7PGHGFgZca22mVAps1Px4muWqgJ376ZXnz8Wpo1EgvnC"
+om_universe = "64iK3xKi71fxKE6nDR8NZkEjNCFrKWCg521GsBNZ66R8"
 
 [registry]
 url = "https://anchor.projectserum.com"
@@ -9,4 +9,4 @@ cluster = "localnet"
 wallet = "/Users/zihua/.config/solana/id.json"
 
 [scripts]
-test = "mocha -t 1000000 tests/"
+test-all = "mocha -t 1000000 tests/"

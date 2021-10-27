@@ -1,12 +1,12 @@
 [package]
-name = "ror-story"
+name = "om-universe"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2018"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "ror_story"
+name = "om_universe"
 
 [features]
 no-entrypoint = []

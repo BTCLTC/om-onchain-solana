@@ -1,4 +1,3 @@
-const assert = require("assert");
 const anchor = require("@project-serum/anchor");
 const spl_token = require("@solana/spl-token");
 
@@ -7,6 +6,9 @@ const TOKEN_METADATA_PROGRAM_ID = new anchor.web3.PublicKey(
 );
 const ROR_TEST_TREASURY = new anchor.web3.PublicKey(
   "BD8WwZrk3zGB1CX6JkwnoGxFJiEvZ8sHqxSHJ7TqSoob" // my wallet as treasury for now
+);
+const OM_UNIVERSE_ID = new anchor.web3.PublicKey(
+  "64iK3xKi71fxKE6nDR8NZkEjNCFrKWCg521GsBNZ66R8" // my wallet as treasury for now
 );
 const getMasterEdition = async (mint) => {
   return (
@@ -48,6 +50,18 @@ const getTokenWallet = async (wallet, mint) => {
   )[0];
 };
 
+const getNodeAccount = async (token, programId) => {
+  return (
+    await anchor.web3.PublicKey.findProgramAddress(
+      [
+        'node_account'.toBuffer(),
+        token.toBuffer(),
+      ],
+      programId
+    )
+  )[0];
+}
+
 const createAssociatedTokenAccountInstruction = (
   associatedTokenAddress,
   payer,
@@ -78,18 +92,22 @@ const createAssociatedTokenAccountInstruction = (
   });
 }
 
-describe("ror-story", () => {
+describe("om-universe", () => {
   // Use a local provider.
   const provider = anchor.Provider.local();
   anchor.setProvider(provider);
 
   // Program for the tests.
-  const program = anchor.workspace.RorStory;
+  const program = anchor.workspace.OmUniverse;
 
-  it("Test Mint", async () => {
+  it("mint-genesis", async () => {
+  });
+
+  it("mint-children", async () => {
     const myWallet = provider.wallet;
     const mint = anchor.web3.Keypair.generate();
     const token = await getTokenWallet(myWallet.publicKey, mint.publicKey);
+    const node_account = await getNodeAccount(token, OM_UNIVERSE_ID)
     const metadata = await getMetadata(mint.publicKey);
     const masterEdition = await getMasterEdition(mint.publicKey);
     const rent = await provider.connection.getMinimumBalanceForRentExemption(
@@ -124,7 +142,7 @@ describe("ror-story", () => {
         tokenAccount: token,
 
         // graph vars
-        
+        node_account,
 
         // system vars
         tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
@@ -133,6 +151,13 @@ describe("ror-story", () => {
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
         clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
       },
+      // remainingAccounts:[
+      //   {
+      //     pubkey: null,
+      //     isWritable: false,
+      //     isSigner: false,
+      //   }
+      // ],
       signers: [mint],
       instructions: [
         anchor.web3.SystemProgram.createAccount({
@@ -166,4 +191,11 @@ describe("ror-story", () => {
       ],
     });
   });
+
+  it("change-type", async() => {
+  })
 });
+
+/// TOMORROW:
+// 1. get minting function done with providing previous parent and populate the right data
+// 2. have a mint genesis function and prevent all future calls to that function by storing that somewhere
